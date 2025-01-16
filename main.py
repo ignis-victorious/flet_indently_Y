@@ -35,6 +35,7 @@ def main(page: ft.Page) -> None:
             ],
         )
     )
+    print(page)
 
 
 if __name__ == "__main__":
