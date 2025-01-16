@@ -1,6 +1,6 @@
 import flet as ft
 from flet import TextField
-from flet_core.control_event import ControlEvent
+from flet import ControlEvent
 
 
 def main(page: ft.Page) -> None:
@@ -11,10 +11,10 @@ def main(page: ft.Page) -> None:
 
     text_number: TextField = TextField(
         value="0",
-        text_align=ft.TextAlign.RIGHT,
-        width=100,
+        text_align=ft.TextAlign.CENTER,  # .RIGHT,
+        width=80,  # =100,
         label="Counter",
-        enabled=False,
+        # enabled=False,
     )
 
     def decrement_counter(event: ControlEvent) -> None:
@@ -28,10 +28,10 @@ def main(page: ft.Page) -> None:
     page.add(
         ft.Row(
             alignment=ft.MainAxisAlignment.CENTER,
-            children=[
-                ft.IconButton(icons=ft.Icons.REMOVE, on_click=decrement_counter),
+            controls=[
+                ft.IconButton(ft.icons.REMOVE, on_click=decrement_counter),
                 text_number,
-                ft.IconButton(icon=ft.Icons.ADD, on_click=increment_counter),
+                ft.IconButton(ft.icons.ADD, on_click=increment_counter),
             ],
         )
     )
@@ -39,7 +39,10 @@ def main(page: ft.Page) -> None:
 
 
 if __name__ == "__main__":
-    ft.ruappn(main)
+    # Run as a desktop app
+    # ft.app(target=main)
+    # Run as a web app
+    ft.app(target=main, view=ft.AppView.WEB_BROWSER)
 
 
 # # ft.IconButton(icon="remove", on_pressed=decrement_counter),
