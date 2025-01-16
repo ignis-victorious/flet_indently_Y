@@ -1,67 +1,98 @@
 import flet as ft
-from flet import TextField
+from flet import TextField, Checkbox, ElevatedButton, Text, Row, Column
 from flet import ControlEvent
 
 
 def main(page: ft.Page) -> None:
-    page.title = "Increment Counter"  # "Hello, Flet!"
+    page.title = "Sign-up"  # "Hello, Flet!"
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
     #  Mode can be 'light' or 'dark'
-    page.theme_mode = "dark"
+    page.theme_mode = ft.ThemeMode.LIGHT  # "dark"
+    page.window.width = 400
+    page.window.height = 400
+    page.window.resizable = False
+    print("First leg passed")
 
-    text_number: TextField = TextField(
-        value="0",
-        text_align=ft.TextAlign.CENTER,  # .RIGHT,
-        width=80,  # =100,
-        label="Counter",
-        # enabled=False,
+    # Fields setup
+    text_username = TextField(
+        label="Username",
+        text_align=ft.TextAlign.START,
+        width=200,
+        # placeholder="Enter your username",
     )
+    text_password = TextField(
+        label="Password",
+        text_align=ft.TextAlign.START,
+        width=200,
+        # placeholder="Enter your password",
+        password=True,
+    )
+    checkbox_signup: Checkbox = Checkbox(
+        label="I agree to the terms of the contract", value=False
+    )
+    button_submit: ElevatedButton = ElevatedButton(
+        text="Sign up", width=200, height=50, disabled=True
+    )
+    print("Textes passed")
 
-    def decrement_counter(event: ControlEvent) -> None:
-        text_number.value = str(int(text_number.value) - 1)
+    #  Check that all fields are filled out before the submit button is enabled!
+    def validate(event: ControlEvent) -> None:
+        if all([text_username.value and text_password.value, checkbox_signup.value]):
+            button_submit.disabled = False
+        else:
+            button_submit.disabled = True
+
         page.update()
 
-    def increment_counter(event: ControlEvent) -> None:
-        text_number.value = str(int(text_number.value) + 1)
-        page.update()
+    def submit(event: ControlEvent) -> None:
+        print(f"Username: {text_username.value}")
+        print(f"Password: {text_password.value}")
+        print(f"Sign-up: {checkbox_signup.value}")
 
+        page.clean()
+        page.add(
+            Row(
+                controls=[Text(value=f"Welcome: {text_username.value}", size=20)],
+                alignment=ft.MainAxisAlignment.CENTER,
+            )
+        )
+
+    checkbox_signup.on_change = validate
+    text_username.on_change = validate
+    text_password.on_change = validate
+    button_submit.on_click = submit
+
+    #  Render the Sing-up page
     page.add(
-        ft.Row(
+        Row(
             alignment=ft.MainAxisAlignment.CENTER,
             controls=[
-                ft.IconButton(ft.icons.REMOVE, on_click=decrement_counter),
-                text_number,
-                ft.IconButton(ft.icons.ADD, on_click=increment_counter),
+                Column(
+                    alignment=ft.MainAxisAlignment.START,
+                    controls=[
+                        text_username,
+                        text_password,
+                        checkbox_signup,
+                        button_submit,
+                    ],
+                    spacing=20,
+                )
             ],
         )
     )
-    print(page)
+
+    # print(page)
 
 
 if __name__ == "__main__":
     # Run as a desktop app
-    # ft.app(target=main)
+    ft.app(target=main)
+
     # Run as a web app
-    ft.app(target=main, view=ft.AppView.WEB_BROWSER)
+    # ft.app(target=main, view=ft.AppView.WEB_BROWSER)
 
-
-# # ft.IconButton(icon="remove", on_pressed=decrement_counter),
-#                 ft.IconButton(icon:ft.icons.REMOVE, on_click=decrement_counter),
-#                 text_number,
-#                 # ft.IconButton(icon="add", on_pressed=increment_counter),
-#                 ft.IconButton(icon:ft.icons.ADD, on_click=increment_counter),
-# ft.Button(
-#                     label="-",
-#                     on_click=decrement_counter,
-#                     width=50,
-#                     height=50,
-#                     margin=ft.EdgeInsets.only(right=10),
-#                 ),
-#                 text_number,
-#                 ft.Button(
-#                     label="+",
-#                     on_click=increment_counter,
-#                     width=50,
-#                     height=50,
-#                     margin=ft.EdgeInsets.only(left=10),
-#                 ),
+    # def check_fields():
+    #     if text_username.text and text_password.text:
+    #         button_submit.disabled = False
+    #     else:
+    #         button_submit.disabled = True
